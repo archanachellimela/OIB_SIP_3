@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Temperature Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2193b0, #6dd5ed);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .converter {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            color: #fff;
+            text-align: center;
+        }
+
+        .converter h1 {
+            margin-bottom: 10px;
+        }
+
+        .converter p {
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            background: #ffdd57;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ffe680;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            display: none;
+        }
+
+        .cold {
+            background: rgba(0, 123, 255, 0.25);
+        }
+
+        .moderate {
+            background: rgba(40, 167, 69, 0.25);
+        }
+
+        .hot {
+            background: rgba(220, 53, 69, 0.25);
+        }
+
+        footer {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter">
+    <h1>🌡️ Temperature Converter</h1>
+    <p>Convert Celsius, Fahrenheit & Kelvin</p>
+
+    <!-- Input -->
+    <input type="text" id="tempInput" placeholder="Enter temperature">
+
+    <!-- Unit selection -->
+    <select id="unit">
+        <option value="">Select unit</option>
+        <option value="c">Celsius (°C)</option>
+        <option value="f">Fahrenheit (°F)</option>
+        <option value="k">Kelvin (K)</option>
+    </select>
+
+    <!-- Button -->
+    <button onclick="convertTemp()">Convert</button>
+
+    <!-- Result -->
+    <div id="result" class="result"></div>
+
+    <footer>
+        Beginner Friendly Project © 2026
+    </footer>
+</div>
+
+<script>
+    function convertTemp() {
+        const tempValue = document.getElementById("tempInput").value;
+        const unit = document.getElementById("unit").value;
+        const resultBox = document.getElementById("result");
+
+        // Validation
+        if (tempValue === "" || isNaN(tempValue)) {
+            resultBox.style.display = "block";
+            resultBox.className = "result";
+            resultBox.textContent = "❌ Please enter a valid number.";
+            return;
+        }
+
+        if (unit === "") {
+            resultBox.style.display = "block";
+            resultBox.className = "result";
+            resultBox.textContent = "❌ Please select a temperature unit.";
+            return;
+        }
+
+        const temp = parseFloat(tempValue);
+        let celsius;
+
+        // Convert input to Celsius first
+        if (unit === "c") celsius = temp;
+        if (unit === "f") celsius = (temp - 32) * 5 / 9;
+        if (unit === "k") celsius = temp - 273.15;
+
+        // Convert Celsius to all units
+        const fahrenheit = (celsius * 9 / 5) + 32;
+        const kelvin = celsius + 273.15;
+
+        // Temperature analysis
+        let moodClass;
+        let description;
+
+        if (celsius < 10) {
+            moodClass = "cold";
+            description = "❄️ Cold temperature";
+        } else if (celsius < 30) {
+            moodClass = "moderate";
+            description = "🌤️ Moderate temperature";
+        } else {
+            moodClass = "hot";
+            description = "🔥 Hot temperature";
+        }
+
+        resultBox.style.display = "block";
+        resultBox.className = `result ${moodClass}`;
+        resultBox.innerHTML = `
+            <strong>Converted Temperature</strong><br><br>
+            🌡️ ${celsius.toFixed(2)} °C<br>
+            🌡️ ${fahrenheit.toFixed(2)} °F<br>
+            🌡️ ${kelvin.toFixed(2)} K<br><br>
+            <em>${description}</em>
+        `;
+    }
+</script>
+
+</body>
+</html>
